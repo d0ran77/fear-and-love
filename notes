@@ -1,3 +1,3 @@
-git add package.json package-lock.json
+git add .
 git commit -m "fix: add missing tailwind vite dependency"
 git push
