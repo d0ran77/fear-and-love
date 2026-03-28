@@ -13,7 +13,8 @@ import {
   Target,
   ArrowRight,
   Focus,
-  PieChart
+  PieChart,
+  User
 } from 'lucide-react';
 
 const App = () => {
@@ -22,14 +23,13 @@ const App = () => {
   const [viewMode, setViewMode] = useState('archive'); // 'archive' or 'matrix'
   const [animateState, setAnimateState] = useState(false);
 
-  // Trigger elegant entrance animations ONLY on view switch, preventing the "flash" on data clicks
+  // Trigger elegant entrance animations ONLY on view switch to prevent data-click flashes
   useEffect(() => {
     setAnimateState(false);
     const timer = setTimeout(() => setAnimateState(true), 50);
     return () => clearTimeout(timer);
   }, [viewMode]); 
 
-  // Strictly sourced academic literature content
   const data = [
     {
       title: "Alliance Primacy",
@@ -87,7 +87,6 @@ const App = () => {
     }
   ];
 
-  // Variance Evidence mapped to thematic titles and verbatim quotes
   const evidenceRegistry = [
     {
       title: "The Truth of Love",
@@ -115,21 +114,18 @@ const App = () => {
     }
   ];
 
-  // TAILWIND V4 DESIGN TOKENS
   const panelWhite = "bg-white border border-black/5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] rounded-[40px]";
   const panelBlack = "bg-[#0A0A0A] text-white shadow-[0_30px_80px_-20px_rgba(0,0,0,0.4)] rounded-[40px]";
   
-  // Transition logic using v4 capabilities (native transitions)
   const fadeUpAnim = `transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${animateState ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`;
   const zoomInAnim = `transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${animateState ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.98]'}`;
 
   return (
     <div className="min-h-screen bg-[#f4f4f5] text-[#0A0A0A] font-sans flex flex-col items-center p-4 md:p-8 lg:p-12 select-none overflow-x-hidden relative">
       
-      {/* Hide scrollbar cleanly */}
       <style>{`::-webkit-scrollbar { width: 0px; background: transparent; }`}</style>
 
-      {/* AMBIENT DEPTH OF FIELD (Grayscale Bokeh) */}
+      {/* AMBIENT DEPTH OF FIELD */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="absolute top-[-10%] right-[-10%] size-[60%] rounded-full bg-white blur-[120px] opacity-100" />
         <div className="absolute bottom-[-20%] left-[-10%] size-[50%] rounded-full bg-slate-300 blur-[150px] opacity-40" />
@@ -159,49 +155,62 @@ const App = () => {
           </div>
         </div>
 
-        {/* MAIN WORKSPACE - Dynamic flex-1 stretching instead of fixed min-height */}
+        {/* MAIN WORKSPACE */}
         <div className="w-full flex-1 flex flex-col">
           
           {/* VIEW 1: RELATIONAL ARCHIVE */}
           {viewMode === 'archive' && (
             <div className={`flex flex-col lg:flex-row gap-10 flex-1 ${zoomInAnim}`}>
               
-              <aside className={`flex flex-col w-full lg:w-[340px] shrink-0 ${panelWhite} p-10`}>
-                <header className="space-y-4 mb-10 shrink-0">
-                  <h1 className="text-4xl lg:text-5xl font-black tracking-tighter uppercase italic leading-[0.8] text-black">
-                    Fear & <br/> Love
-                  </h1>
-                  <div className="flex items-center gap-4 pt-2">
-                    <div className="h-0.5 w-8 bg-black" />
-                    <p className="text-[9px] font-black tracking-[0.4em] text-slate-400 uppercase">
-                      Literature Base
-                    </p>
-                  </div>
-                </header>
+              {/* SIDEBAR - Optimized for vertical space usage */}
+              <aside className={`flex flex-col w-full lg:w-[340px] shrink-0 ${panelWhite} p-10 justify-between`}>
+                <div className="flex flex-col gap-10">
+                  <header className="space-y-4 shrink-0">
+                    <h1 className="text-4xl lg:text-5xl font-black tracking-tighter uppercase italic leading-[0.8] text-black">
+                      Fear & <br/> Love
+                    </h1>
+                    <div className="flex items-center gap-4 pt-2">
+                      <div className="h-0.5 w-8 bg-black" />
+                      <p className="text-[9px] font-black tracking-[0.4em] text-slate-400 uppercase">
+                        Literature Base
+                      </p>
+                    </div>
+                  </header>
 
-                <nav className="space-y-2 flex-1 overflow-y-auto">
-                  {data.map((item, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setIndex(i)}
-                      className={`w-full text-left p-4 rounded-[24px] flex items-center gap-5 outline-none transition-all duration-500 ${
-                        index === i 
-                        ? `bg-[#0A0A0A] text-white shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)] translate-x-2` 
-                        : 'bg-transparent text-slate-500 hover:bg-black/5 hover:text-black'
-                      }`}
-                    >
-                      <div className={`shrink-0 transition-transform duration-500 ${index === i ? 'scale-110' : ''}`}>
-                        {item.icon}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-[11px] font-black uppercase tracking-widest truncate">{item.title}</div>
-                        <div className={`text-[8px] font-bold uppercase tracking-widest truncate mt-1 ${index === i ? 'text-slate-300' : 'text-slate-400'}`}>
-                          {item.subtitle}
+                  <nav className="space-y-2 overflow-y-auto max-h-[50vh] lg:max-h-none">
+                    {data.map((item, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setIndex(i)}
+                        className={`w-full text-left p-4 rounded-[24px] flex items-center gap-5 outline-none transition-all duration-500 ${
+                          index === i 
+                          ? `bg-[#0A0A0A] text-white shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)] translate-x-2` 
+                          : 'bg-transparent text-slate-500 hover:bg-black/5 hover:text-black'
+                        }`}
+                      >
+                        <div className={`shrink-0 transition-transform duration-500 ${index === i ? 'scale-110' : ''}`}>
+                          {item.icon}
                         </div>
-                      </div>
-                    </button>
-                  ))}
-                </nav>
+                        <div className="min-w-0">
+                          <div className="text-[11px] font-black uppercase tracking-widest truncate">{item.title}</div>
+                          <div className={`text-[8px] font-bold uppercase tracking-widest truncate mt-1 ${index === i ? 'text-slate-300' : 'text-slate-400'}`}>
+                            {item.subtitle}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </nav>
+                </div>
+
+                {/* RESTORED & UPDATED: THE "BE YOU, USE YOU" PHRASE + ICON */}
+                <div className="mt-auto pt-8 border-t border-black/5 flex items-center gap-4">
+                  <div className="size-10 rounded-full bg-black/5 flex items-center justify-center text-black shrink-0">
+                    <User size={18} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 leading-relaxed italic">
+                    "Use yourself as the instrument. Be yourself as the data."
+                  </span>
+                </div>
               </aside>
 
               <div className="flex-1 flex flex-col gap-10">
@@ -210,10 +219,10 @@ const App = () => {
                     <Minus size={32} strokeWidth={2} className="text-black" />
                     <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Subject Overview</span>
                   </div>
-                  <h3 className="text-[10px] font-bold text-black uppercase tracking-[0.3em] mb-4 transition-all duration-300">
+                  <h3 className="text-[10px] font-bold text-black uppercase tracking-[0.3em] mb-4">
                     {data[index].citation}
                   </h3>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter leading-[1.1] text-black italic max-w-4xl transition-all duration-300">
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter leading-[1.1] text-black italic max-w-4xl">
                     {data[index].description}
                   </h2>
                 </div>
@@ -221,16 +230,27 @@ const App = () => {
                 <div className={`flex-1 p-10 md:p-14 flex flex-col justify-between ${panelBlack} relative overflow-hidden`}>
                   <Quote className="absolute -bottom-10 -right-6 opacity-5 rotate-12 pointer-events-none" size={300} />
                   <div className="relative z-10 flex flex-col h-full justify-between">
-                    <p className="text-xl md:text-2xl lg:text-3xl font-black text-white leading-[1.3] italic max-w-4xl transition-all duration-300">
+                    <p className="text-xl md:text-2xl lg:text-3xl font-black text-white leading-[1.3] italic max-w-4xl">
                       "{data[index].insight}"
                     </p>
-                    <div className="border-t border-white/10 pt-8 mt-8 flex flex-wrap gap-4 items-center">
-                      <Book size={18} className="text-slate-400" />
-                      {data[index].references.map((ref, i) => (
-                        <div key={i} className="px-5 py-2.5 rounded-full border border-white/20 text-[9px] font-bold text-white uppercase tracking-widest transition-all duration-300">
-                          {ref}
-                        </div>
-                      ))}
+                    
+                    <div className="border-t border-white/10 pt-8 mt-8 flex flex-wrap items-center justify-between gap-6">
+                      <div className="flex flex-wrap gap-4 items-center">
+                        <Book size={18} className="text-slate-400" />
+                        {data[index].references.map((ref, i) => (
+                          <div key={i} className="px-5 py-2.5 rounded-full border border-white/20 text-[9px] font-bold text-white uppercase tracking-widest">
+                            {ref}
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <button 
+                        onClick={() => setIndex((prev) => (prev + 1) % data.length)}
+                        className="flex items-center gap-3 text-white/50 hover:text-white transition-all group outline-none cursor-pointer"
+                      >
+                        <span className="text-[10px] font-black uppercase tracking-[0.4em]">Next Insight</span>
+                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -243,7 +263,6 @@ const App = () => {
             <div className={`flex flex-col gap-10 flex-1 ${fadeUpAnim}`}>
               
               <div className={`flex-[1.2] p-10 md:p-14 flex flex-col ${panelWhite}`}>
-                
                 <div className="flex items-center gap-4 mb-6 shrink-0">
                    <PieChart size={28} strokeWidth={2} className="text-black" />
                    <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Variance Architecture</span>
@@ -259,28 +278,24 @@ const App = () => {
                            <line x1="0" y1="0" x2="0" y2="12" stroke="#0A0A0A" strokeWidth="1" opacity="0.25" />
                          </pattern>
                        </defs>
-                       
                        <g className={`origin-center transition-all duration-500 cursor-pointer ${evidenceMode === 0 ? 'scale-[1.05] drop-shadow-2xl' : 'hover:scale-[1.02] opacity-90 hover:opacity-100'}`} onClick={() => setEvidenceMode(0)}>
                          <path d="M 110 110 L 110 10 A 100 100 0 1 1 51.22 190.90 Z" fill="#0A0A0A" />
                        </g>
-                       
                        <g className={`origin-center transition-all duration-500 cursor-pointer ${evidenceMode === 2 ? 'scale-[1.05] drop-shadow-lg' : 'hover:scale-[1.02] opacity-90 hover:opacity-100'}`} onClick={() => setEvidenceMode(2)}>
                          <path d="M 110 110 L 51.22 190.90 A 100 100 0 0 1 61.82 22.37 Z" fill="url(#hatch)" stroke="#0A0A0A" strokeWidth="1" strokeOpacity="0.4" />
                        </g>
-                       
                        <g className={`origin-center transition-all duration-500 cursor-pointer ${evidenceMode === 1 ? 'scale-[1.1] drop-shadow-lg z-10' : 'hover:scale-[1.05] opacity-90 hover:opacity-100'}`} onClick={() => setEvidenceMode(1)}>
                          <path d="M 110 110 L 61.82 22.37 A 100 100 0 0 1 110 10 Z" fill="#ffffff" stroke="#0A0A0A" strokeWidth="3" />
                        </g>
                     </svg>
                   </div>
 
-                  {/* PIE CHART LEGEND */}
                   <div className="flex flex-col gap-8 md:gap-10 shrink-0">
                     <div className={`flex items-center gap-5 transition-opacity duration-500 cursor-pointer ${evidenceMode === 0 ? 'opacity-100' : 'opacity-40 hover:opacity-80'}`} onClick={() => setEvidenceMode(0)}>
                       <div className="size-12 shrink-0 rounded-full bg-[#0A0A0A] flex items-center justify-center text-white font-black italic shadow-[0_10px_20px_rgba(0,0,0,0.3)]">60</div>
                       <div className="flex flex-col pt-1">
-                        <span className="text-xl font-black uppercase tracking-widest leading-none">Container</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1.5">The Alliance</span>
+                        <span className="text-xl font-black uppercase tracking-widest leading-none">The Truth of Love</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1.5">60% · The Alliance Container</span>
                       </div>
                     </div>
                     <div className={`flex items-center gap-5 transition-opacity duration-500 cursor-pointer ${evidenceMode === 2 ? 'opacity-100' : 'opacity-40 hover:opacity-80'}`} onClick={() => setEvidenceMode(2)}>
@@ -289,15 +304,15 @@ const App = () => {
                         <span className="relative z-10">32</span>
                       </div>
                       <div className="flex flex-col pt-1">
-                        <span className="text-xl font-black uppercase tracking-widest leading-none">Context</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1.5">Patient Life</span>
+                        <span className="text-xl font-black uppercase tracking-widest leading-none">Extratherapeutic Reality</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1.5">32% · Patient Context</span>
                       </div>
                     </div>
                     <div className={`flex items-center gap-5 transition-opacity duration-500 cursor-pointer ${evidenceMode === 1 ? 'opacity-100' : 'opacity-40 hover:opacity-80'}`} onClick={() => setEvidenceMode(1)}>
                       <div className="size-12 shrink-0 rounded-full bg-white border-[3px] border-[#0A0A0A] flex items-center justify-center text-black font-black italic shadow-sm">8</div>
                       <div className="flex flex-col pt-1">
-                        <span className="text-xl font-black uppercase tracking-widest leading-none">Process</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1.5">Technique</span>
+                        <span className="text-xl font-black uppercase tracking-widest leading-none">The Love of Truth</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1.5">8% · Process & Technique</span>
                       </div>
                     </div>
                   </div>
@@ -306,7 +321,7 @@ const App = () => {
 
               <div className="flex-1 flex flex-col lg:flex-row gap-10 items-stretch">
                 <div className={`w-full lg:w-[40%] flex flex-col gap-4 p-8 lg:p-10 ${panelWhite}`}>
-                  <div className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mb-2 pl-2">Data Registry</div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mb-2 pl-2">Evidence Registry</div>
                   {evidenceRegistry.map((item, i) => (
                     <button key={i} onClick={() => setEvidenceMode(i)} className={`w-full text-left p-5 rounded-[24px] transition-all duration-500 flex items-center gap-5 outline-none border ${evidenceMode === i ? `bg-[#0A0A0A] text-white border-black shadow-[0_15px_30px_-10px_rgba(0,0,0,0.4)] scale-[1.02]` : `bg-transparent text-black border-black/5 hover:border-black/20 hover:bg-black/5`}`}>
                       <div className={`shrink-0 transition-colors ${evidenceMode === i ? 'text-white' : 'text-slate-400'}`}>{item.icon}</div>
@@ -317,6 +332,16 @@ const App = () => {
                       {evidenceMode === i && <ArrowRight size={16} className="ml-auto opacity-50" />}
                     </button>
                   ))}
+                  
+                  {/* RELOCATED PHRASE: Nested firmly at the bottom of the registry */}
+                  <div className="mt-auto pt-6 flex items-start gap-4 px-2 opacity-60 border-t border-black/5">
+                    <div className="mt-0.5 text-black shrink-0">
+                      <User size={16} strokeWidth={2.5} />
+                    </div>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 leading-relaxed italic">
+                      "Use yourself as the instrument. Be yourself as the data."
+                    </span>
+                  </div>
                 </div>
 
                 <div className={`flex-1 p-10 md:p-14 flex flex-col justify-center ${panelBlack} relative overflow-hidden`}>
@@ -331,6 +356,7 @@ const App = () => {
                          "{evidenceRegistry[evidenceMode].content}"
                        </p>
                     </div>
+                    
                     <div className="border-t border-white/10 pt-8 mt-8 flex items-center justify-between">
                       <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 transition-all duration-300">— {evidenceRegistry[evidenceMode].source}</span>
                     </div>
