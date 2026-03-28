@@ -22,12 +22,12 @@ const App = () => {
   const [viewMode, setViewMode] = useState('archive'); // 'archive' or 'matrix'
   const [animateState, setAnimateState] = useState(false);
 
-  // Trigger elegant entrance animations on state change
+  // Trigger elegant entrance animations ONLY on view switch, preventing the "flash" on data clicks
   useEffect(() => {
     setAnimateState(false);
     const timer = setTimeout(() => setAnimateState(true), 50);
     return () => clearTimeout(timer);
-  }, [index, viewMode, evidenceMode]);
+  }, [viewMode]); 
 
   // Strictly sourced academic literature content
   const data = [
@@ -135,10 +135,10 @@ const App = () => {
         <div className="absolute bottom-[-20%] left-[-10%] size-[50%] rounded-full bg-slate-300 blur-[150px] opacity-40" />
       </div>
 
-      <div className="relative z-10 w-full max-w-[1400px] flex flex-col gap-10">
+      <div className="relative z-10 w-full max-w-[1400px] flex flex-col gap-10 flex-1">
         
         {/* EGO STATE TOGGLE */}
-        <div className="w-full flex justify-center sticky top-2 z-50">
+        <div className="w-full flex justify-center sticky top-2 z-50 shrink-0">
           <div className="w-[340px] h-14 bg-white/80 backdrop-blur-xl border border-black/10 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] rounded-full p-1.5 relative flex">
              <div 
                className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] rounded-full bg-[#0A0A0A] shadow-md transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
@@ -159,15 +159,15 @@ const App = () => {
           </div>
         </div>
 
-        {/* MAIN WORKSPACE */}
-        <div className="w-full min-h-[720px]">
+        {/* MAIN WORKSPACE - Dynamic flex-1 stretching instead of fixed min-height */}
+        <div className="w-full flex-1 flex flex-col">
           
           {/* VIEW 1: RELATIONAL ARCHIVE */}
           {viewMode === 'archive' && (
-            <div className={`flex flex-col lg:flex-row gap-10 h-full ${zoomInAnim}`}>
+            <div className={`flex flex-col lg:flex-row gap-10 flex-1 ${zoomInAnim}`}>
               
               <aside className={`flex flex-col w-full lg:w-[340px] shrink-0 ${panelWhite} p-10`}>
-                <header className="space-y-4 mb-10">
+                <header className="space-y-4 mb-10 shrink-0">
                   <h1 className="text-4xl lg:text-5xl font-black tracking-tighter uppercase italic leading-[0.8] text-black">
                     Fear & <br/> Love
                   </h1>
@@ -179,7 +179,7 @@ const App = () => {
                   </div>
                 </header>
 
-                <nav className="space-y-2 flex-1">
+                <nav className="space-y-2 flex-1 overflow-y-auto">
                   {data.map((item, i) => (
                     <button
                       key={i}
@@ -210,10 +210,10 @@ const App = () => {
                     <Minus size={32} strokeWidth={2} className="text-black" />
                     <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Subject Overview</span>
                   </div>
-                  <h3 className="text-[10px] font-bold text-black uppercase tracking-[0.3em] mb-4">
+                  <h3 className="text-[10px] font-bold text-black uppercase tracking-[0.3em] mb-4 transition-all duration-300">
                     {data[index].citation}
                   </h3>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter leading-[1.1] text-black italic max-w-4xl">
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter leading-[1.1] text-black italic max-w-4xl transition-all duration-300">
                     {data[index].description}
                   </h2>
                 </div>
@@ -221,13 +221,13 @@ const App = () => {
                 <div className={`flex-1 p-10 md:p-14 flex flex-col justify-between ${panelBlack} relative overflow-hidden`}>
                   <Quote className="absolute -bottom-10 -right-6 opacity-5 rotate-12 pointer-events-none" size={300} />
                   <div className="relative z-10 flex flex-col h-full justify-between">
-                    <p className="text-xl md:text-2xl lg:text-3xl font-black text-white leading-[1.3] italic max-w-4xl">
+                    <p className="text-xl md:text-2xl lg:text-3xl font-black text-white leading-[1.3] italic max-w-4xl transition-all duration-300">
                       "{data[index].insight}"
                     </p>
                     <div className="border-t border-white/10 pt-8 mt-8 flex flex-wrap gap-4 items-center">
                       <Book size={18} className="text-slate-400" />
                       {data[index].references.map((ref, i) => (
-                        <div key={i} className="px-5 py-2.5 rounded-full border border-white/20 text-[9px] font-bold text-white uppercase tracking-widest">
+                        <div key={i} className="px-5 py-2.5 rounded-full border border-white/20 text-[9px] font-bold text-white uppercase tracking-widest transition-all duration-300">
                           {ref}
                         </div>
                       ))}
@@ -240,19 +240,19 @@ const App = () => {
 
           {/* VIEW 2: VARIANCE CONTEXT (PIE CHART) */}
           {viewMode === 'matrix' && (
-            <div className={`flex flex-col gap-10 h-full ${fadeUpAnim}`}>
+            <div className={`flex flex-col gap-10 flex-1 ${fadeUpAnim}`}>
               
               <div className={`flex-[1.2] p-10 md:p-14 flex flex-col ${panelWhite}`}>
                 
-                <div className="flex items-center gap-4 mb-6">
+                <div className="flex items-center gap-4 mb-6 shrink-0">
                    <PieChart size={28} strokeWidth={2} className="text-black" />
                    <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Variance Architecture</span>
                 </div>
 
-                <div className="flex-1 w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 border-b border-black/10 pb-8 mt-6 min-h-[260px]">
+                <div className="flex-1 w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 border-b border-black/10 pb-8 mt-6">
                   
                   {/* SVG PIE CHART */}
-                  <div className="relative size-[220px] md:size-[280px]">
+                  <div className="relative size-[220px] md:size-[280px] shrink-0">
                     <svg viewBox="0 0 220 220" className="size-full overflow-visible">
                        <defs>
                          <pattern id="hatch" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(45)">
@@ -274,12 +274,13 @@ const App = () => {
                     </svg>
                   </div>
 
-                  <div className="flex flex-col gap-8 md:gap-10">
+                  {/* PIE CHART LEGEND */}
+                  <div className="flex flex-col gap-8 md:gap-10 shrink-0">
                     <div className={`flex items-center gap-5 transition-opacity duration-500 cursor-pointer ${evidenceMode === 0 ? 'opacity-100' : 'opacity-40 hover:opacity-80'}`} onClick={() => setEvidenceMode(0)}>
                       <div className="size-12 shrink-0 rounded-full bg-[#0A0A0A] flex items-center justify-center text-white font-black italic shadow-[0_10px_20px_rgba(0,0,0,0.3)]">60</div>
                       <div className="flex flex-col pt-1">
                         <span className="text-xl font-black uppercase tracking-widest leading-none">Container</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em] mt-1.5">The Alliance</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1.5">The Alliance</span>
                       </div>
                     </div>
                     <div className={`flex items-center gap-5 transition-opacity duration-500 cursor-pointer ${evidenceMode === 2 ? 'opacity-100' : 'opacity-40 hover:opacity-80'}`} onClick={() => setEvidenceMode(2)}>
@@ -326,12 +327,12 @@ const App = () => {
                          <Zap size={18} />
                          <span className="text-[9px] font-black uppercase tracking-[0.5em]">Selected Findings: {evidenceRegistry[evidenceMode].percent}</span>
                        </div>
-                       <p className="text-2xl md:text-3xl lg:text-4xl font-black italic leading-[1.2] text-white max-w-2xl border-l-[6px] border-white/20 pl-8">
+                       <p className="text-2xl md:text-3xl lg:text-4xl font-black italic leading-[1.2] text-white max-w-2xl border-l-[6px] border-white/20 pl-8 transition-all duration-300">
                          "{evidenceRegistry[evidenceMode].content}"
                        </p>
                     </div>
                     <div className="border-t border-white/10 pt-8 mt-8 flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300">— {evidenceRegistry[evidenceMode].source}</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 transition-all duration-300">— {evidenceRegistry[evidenceMode].source}</span>
                     </div>
                   </div>
                 </div>
